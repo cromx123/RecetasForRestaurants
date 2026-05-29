@@ -6,10 +6,11 @@ import BottomNav from '@/components/BottomNav';
 import AdminOnly from '@/components/AdminOnly';
 
 const sections = [
-  { label: '📖 Recetas', desc: 'Crear, editar y eliminar recetas', href: '/admin/recetas' },
-  { label: '🧂 Ingredientes', desc: 'Gestionar ingredientes disponibles', href: '/admin/ingredientes' },
-  { label: '🔍 Filtros', desc: 'Administrar filtros de búsqueda', href: '/admin/filtros' },
-  { label: '👥 Usuarios', desc: 'Ver y gestionar usuarios registrados', href: '/admin/usuarios' },
+  { label: '📖 Recetas',     desc: 'Crear, editar y eliminar platos de la carta',       href: '/admin/recetas' },
+  { label: '🧂 Ingredientes',desc: 'Gestionar ingredientes disponibles',                href: '/admin/ingredientes' },
+  { label: '🔍 Filtros',     desc: 'Administrar filtros de búsqueda',                   href: '/admin/filtros' },
+  { label: '👥 Usuarios',    desc: 'Ver y gestionar usuarios registrados',              href: '/admin/usuarios' },
+  { label: '📅 Reservas',    desc: 'Configurar horarios y duraciones de reservas',     href: '/admin/reservas' },
 ];
 
 function AdminContent() {

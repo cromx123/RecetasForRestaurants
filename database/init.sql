@@ -27,6 +27,22 @@ CREATE TABLE IF NOT EXISTS recipes (
   description TEXT,
   link VARCHAR(500),
   image_url TEXT,
+  category ENUM(
+    'Entradas',
+    'Sopas y Cremas',
+    'Ensaladas',
+    'Pastas y Arroces',
+    'Carnes',
+    'Aves',
+    'Mariscos',
+    'Postres',
+    'Bebidas',
+    'Cócteles',
+    'Vinos'
+  ) NOT NULL DEFAULT 'Entradas',
+  price DECIMAL(10,0) NOT NULL DEFAULT 0,
+  preparation_time INT NULL,
+  is_available TINYINT(1) NOT NULL DEFAULT 1,
   created_by INT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
@@ -79,4 +95,27 @@ CREATE TABLE IF NOT EXISTS favorites (
   PRIMARY KEY (user_id, recipe_id),
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS reservations (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  reservation_date DATE NOT NULL,
+  reservation_time TIME NOT NULL,
+  duration INT NOT NULL DEFAULT 60,
+  guests INT NOT NULL DEFAULT 2,
+  notes TEXT NULL,
+  status ENUM('confirmada', 'cancelada') NOT NULL DEFAULT 'confirmada',
+  reminder_sent TINYINT(1) NOT NULL DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  INDEX idx_date_status (reservation_date, status),
+  INDEX idx_user (user_id)
+);
+
+CREATE TABLE IF NOT EXISTS restaurant_config (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  config_key VARCHAR(50) UNIQUE NOT NULL,
+  config_value LONGTEXT NOT NULL,
+  updated_at TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP
 );

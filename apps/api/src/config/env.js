@@ -13,4 +13,14 @@ module.exports = {
     secret: process.env.JWT_SECRET || 'change_me_dev_secret_2024',
     expiresIn: '7d',
   },
+  smtp: {
+    host: process.env.SMTP_HOST || '',
+    port: parseInt(process.env.SMTP_PORT) || 587,
+    user: process.env.SMTP_USER || '',
+    pass: process.env.SMTP_PASS || '',
+    from: process.env.SMTP_FROM || '"MagicGourmet" <noreply@magicgourmet.cl>',
+  },
+  restaurant: {
+    name: process.env.RESTAURANT_NAME || 'MagicGourmet',
+  },
 };

@@ -62,3 +62,12 @@ export const deleteComment = (id) => apiFetch(`/comments/${id}`, { method: 'DELE
 export const getUsers = () => apiFetch('/users');
 export const updateUser = (id, data) => apiFetch(`/users/${id}`, { method: 'PUT', body: JSON.stringify(data) });
 export const deleteUser = (id) => apiFetch(`/users/${id}`, { method: 'DELETE' });
+
+// Reservations
+export const getReservations    = () => apiFetch('/reservations');
+export const createReservation  = (data) => apiFetch('/reservations', { method: 'POST', body: JSON.stringify(data) });
+export const cancelReservation  = (id) => apiFetch(`/reservations/${id}`, { method: 'DELETE' });
+
+// Restaurant config (public read, admin write)
+export const getRestaurantConfig    = () => apiFetch('/config');
+export const updateRestaurantConfig = (data) => apiFetch('/config', { method: 'PUT', body: JSON.stringify(data) });

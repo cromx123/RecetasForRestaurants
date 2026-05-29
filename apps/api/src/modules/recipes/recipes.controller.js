@@ -3,7 +3,7 @@ const { pool } = require('../../db/pool');
 async function getRecipes(req, res, next) {
   try {
     const [recipes] = await pool.query(
-      'SELECT id, name, description, link, image_url, created_at FROM recipes ORDER BY created_at DESC'
+      'SELECT id, name, description, link, image_url, category, price, preparation_time, is_available, created_at FROM recipes ORDER BY category, name ASC'
     );
 
     const result = await Promise.all(
@@ -35,12 +35,12 @@ async function searchRecipes(req, res, next) {
 
     const term = `%${q}%`;
     const [recipes] = await pool.query(
-      `SELECT DISTINCT r.id, r.name, r.description, r.link, r.image_url, r.created_at
+      `SELECT DISTINCT r.id, r.name, r.description, r.link, r.image_url, r.category, r.price, r.preparation_time, r.is_available, r.created_at
        FROM recipes r
        LEFT JOIN recipe_ingredients ri ON ri.recipe_id = r.id
        LEFT JOIN ingredients i ON i.id = ri.ingredient_id
        WHERE r.name LIKE ? OR r.description LIKE ? OR i.name LIKE ?
-       ORDER BY r.created_at DESC`,
+       ORDER BY r.category, r.name ASC`,
       [term, term, term]
     );
 
@@ -70,7 +70,7 @@ async function getRecipeById(req, res, next) {
   try {
     const { id } = req.params;
     const [rows] = await pool.query(
-      'SELECT id, name, description, link, image_url, created_at FROM recipes WHERE id = ?',
+      'SELECT id, name, description, link, image_url, category, price, preparation_time, is_available, created_at FROM recipes WHERE id = ?',
       [id]
     );
     if (rows.length === 0) return res.status(404).json({ error: 'Receta no encontrada' });
@@ -96,14 +96,14 @@ async function getRecipeById(req, res, next) {
 async function createRecipe(req, res, next) {
   const conn = await pool.getConnection();
   try {
-    const { name, description, link, image_url, ingredients = [], steps = [] } = req.body;
+    const { name, description, link, image_url, category, price, preparation_time, ingredients = [], steps = [] } = req.body;
     if (!name) return res.status(400).json({ error: 'El nombre es requerido' });
 
     await conn.beginTransaction();
 
     const [result] = await conn.query(
-      'INSERT INTO recipes (name, description, link, image_url, created_by) VALUES (?, ?, ?, ?, ?)',
-      [name, description || '', link || '', image_url || '', req.user.id]
+      'INSERT INTO recipes (name, description, link, image_url, category, price, preparation_time, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [name, description || '', link || '', image_url || '', category || 'Entradas', price || 0, preparation_time || null, req.user.id]
     );
     const recipeId = result.insertId;
 
@@ -143,7 +143,7 @@ async function updateRecipe(req, res, next) {
   const conn = await pool.getConnection();
   try {
     const { id } = req.params;
-    const { name, description, link, image_url, ingredients, steps } = req.body;
+    const { name, description, link, image_url, category, price, preparation_time, ingredients, steps } = req.body;
 
     await conn.beginTransaction();
 
@@ -153,6 +153,9 @@ async function updateRecipe(req, res, next) {
     if (description !== undefined) { updates.push('description = ?'); values.push(description); }
     if (link !== undefined) { updates.push('link = ?'); values.push(link); }
     if (image_url !== undefined) { updates.push('image_url = ?'); values.push(image_url); }
+    if (category !== undefined) { updates.push('category = ?'); values.push(category); }
+    if (price !== undefined) { updates.push('price = ?'); values.push(price); }
+    if (preparation_time !== undefined) { updates.push('preparation_time = ?'); values.push(preparation_time); }
 
     if (updates.length > 0) {
       values.push(id);

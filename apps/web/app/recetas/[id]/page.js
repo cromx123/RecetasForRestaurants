@@ -73,11 +73,22 @@ export default function RecetaPage() {
     }
   }
 
+  // Paleta de colores gastronómica
+  const theme = {
+    bg: '#FDFBF7', // Crema cálido
+    textMain: '#2C2A29', // Carbón
+    textMuted: '#78716C', // Gris piedra cálido
+    accent: '#D35400', // Naranja tostado / Terracota
+    accentLight: '#F3EFE6', // Fondo para tags
+    border: '#E7E5E4',
+    cardBg: '#FFFFFF'
+  };
+
   if (loading) {
     return (
-      <div style={{ background: '#121111', minHeight: '100vh' }}>
+      <div style={{ background: theme.bg, minHeight: '100vh' }}>
         <Header showBack />
-        <div style={{ textAlign: 'center', padding: 60, color: '#6b7280' }}>Cargando receta…</div>
+        <div style={{ textAlign: 'center', padding: 60, color: theme.textMuted, fontFamily: 'serif' }}>Preparando cocina…</div>
         <BottomNav />
       </div>
     );
@@ -85,102 +96,115 @@ export default function RecetaPage() {
 
   if (!recipe) {
     return (
-      <div style={{ background: '#121111', minHeight: '100vh' }}>
+      <div style={{ background: theme.bg, minHeight: '100vh' }}>
         <Header showBack />
-        <div style={{ textAlign: 'center', padding: 60, color: '#6b7280' }}>Receta no encontrada</div>
+        <div style={{ textAlign: 'center', padding: 60, color: theme.textMuted }}>La receta no está disponible.</div>
         <BottomNav />
       </div>
     );
   }
 
   return (
-    <div style={{ background: '#121111', minHeight: '100vh' }}>
+    <div style={{ background: theme.bg, minHeight: '100vh', color: theme.textMain, fontFamily: '"Inter", "Helvetica Neue", sans-serif' }}>
       <Header title={recipe.name} showBack />
       <main style={{ paddingBottom: 80 }}>
-        {/* Imagen */}
-        <div style={{ position: 'relative', width: '100%', height: 260 }}>
+        {/* Imagen con gradiente hacia crema */}
+        <div style={{ position: 'relative', width: '100%', height: 320 }}>
           <img
             src={recipe.image_url || '/assets/imagen_nocargada.png'}
             alt={recipe.name}
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             onError={(e) => { e.target.src = '/assets/imagen_nocargada.png'; }}
           />
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #121111 0%, transparent 60%)' }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #FDFBF7 0%, transparent 40%)' }} />
         </div>
 
-        <div style={{ padding: '0 16px', marginTop: -40, position: 'relative' }}>
+        <div style={{ padding: '0 20px', marginTop: -30, position: 'relative' }}>
           {/* Título y favorito */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-            <h1 style={{ fontSize: 24, fontWeight: 700, color: 'white', flex: 1, marginRight: 12 }}>{recipe.name}</h1>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+            <h1 style={{ fontSize: 28, fontWeight: 800, color: theme.textMain, flex: 1, marginRight: 16, lineHeight: 1.2, letterSpacing: '-0.5px' }}>
+              {recipe.name}
+            </h1>
             <button
               onClick={toggleFavorite}
               disabled={favLoading}
               style={{
-                background: isFavorite ? '#3b2f6e' : '#2a2929',
-                border: `1px solid ${isFavorite ? '#8b5cf6' : '#3a3939'}`,
-                borderRadius: 10,
-                padding: '8px 14px',
+                background: theme.cardBg,
+                border: `1px solid ${theme.border}`,
+                borderRadius: '50%',
+                width: 44,
+                height: 44,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
                 cursor: 'pointer',
-                fontSize: 20,
                 flexShrink: 0,
               }}
             >
-              {isFavorite ? '⭐' : '☆'}
+              <svg width="24" height="24" viewBox="0 0 24 24" fill={isFavorite ? theme.accent : "none"} stroke={isFavorite ? theme.accent : theme.textMuted} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
             </button>
           </div>
 
           {/* Descripción */}
           {recipe.description && (
-            <p style={{ color: '#9ca3af', fontSize: 14, lineHeight: 1.6, marginBottom: 20 }}>
+            <p style={{ color: theme.textMuted, fontSize: 15, lineHeight: 1.6, marginBottom: 28, fontWeight: 400 }}>
               {recipe.description}
             </p>
           )}
 
           {/* Ingredientes */}
           {recipe.ingredients?.length > 0 && (
-            <section style={{ marginBottom: 20 }}>
-              <h2 style={{ fontSize: 16, fontWeight: 600, color: '#a78bfa', marginBottom: 10 }}>🧂 Ingredientes</h2>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            <section style={{ marginBottom: 32 }}>
+              <h2 style={{ fontSize: 18, fontWeight: 700, color: theme.textMain, marginBottom: 16, textTransform: 'uppercase', letterSpacing: '1px', borderBottom: `1px solid ${theme.border}`, paddingBottom: 8 }}>
+                Ingredientes
+              </h2>
+              <ul style={{ listStyle: 'none', padding: 0, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 12 }}>
                 {recipe.ingredients.map((ing) => (
-                  <span
+                  <li
                     key={ing.id}
-                    style={{ background: '#2a2929', border: '1px solid #3a3939', borderRadius: 20, padding: '4px 12px', fontSize: 13, color: '#d1d5db' }}
+                    style={{ background: theme.cardBg, border: `1px solid ${theme.border}`, borderRadius: 8, padding: '10px 14px', fontSize: 14, color: theme.textMain, fontWeight: 500, boxShadow: '0 1px 2px rgba(0,0,0,0.02)' }}
                   >
                     {ing.name}
-                  </span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </section>
           )}
 
           {/* Pasos */}
           {recipe.steps?.length > 0 && (
-            <section style={{ marginBottom: 20 }}>
-              <h2 style={{ fontSize: 16, fontWeight: 600, color: '#a78bfa', marginBottom: 10 }}>📋 Preparación</h2>
-              <ol style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <section style={{ marginBottom: 32 }}>
+              <h2 style={{ fontSize: 18, fontWeight: 700, color: theme.textMain, marginBottom: 16, textTransform: 'uppercase', letterSpacing: '1px', borderBottom: `1px solid ${theme.border}`, paddingBottom: 8 }}>
+                Preparación
+              </h2>
+              <ol style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
                 {recipe.steps.map((step, i) => (
                   <li
                     key={step.id}
-                    style={{ display: 'flex', gap: 12, background: '#1e1d1d', borderRadius: 10, padding: '12px 14px' }}
+                    style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}
                   >
                     <span
                       style={{
-                        width: 24,
-                        height: 24,
+                        width: 28,
+                        height: 28,
                         borderRadius: '50%',
-                        background: '#8b5cf6',
-                        color: 'white',
+                        background: theme.accentLight,
+                        color: theme.accent,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        fontSize: 12,
+                        fontSize: 14,
                         fontWeight: 700,
                         flexShrink: 0,
+                        marginTop: 2
                       }}
                     >
                       {i + 1}
                     </span>
-                    <span style={{ fontSize: 14, color: '#d1d5db', lineHeight: 1.6 }}>{step.description}</span>
+                    <span style={{ fontSize: 15, color: theme.textMain, lineHeight: 1.6 }}>{step.description}</span>
                   </li>
                 ))}
               </ol>
@@ -189,83 +213,19 @@ export default function RecetaPage() {
 
           {/* Link */}
           {recipe.link && (
-            <section style={{ marginBottom: 24 }}>
+            <section style={{ marginBottom: 32 }}>
               <a
                 href={recipe.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ color: '#8b5cf6', fontSize: 14 }}
+                style={{ display: 'inline-block', color: theme.accent, fontSize: 15, fontWeight: 600, textDecoration: 'none', borderBottom: `2px solid ${theme.accentLight}`, paddingBottom: 2 }}
               >
-                🔗 Ver receta completa
+                Ver fuente original de la receta ↗
               </a>
             </section>
           )}
 
-          {/* Comentarios */}
-          <section style={{ marginBottom: 24 }}>
-            <h2 style={{ fontSize: 16, fontWeight: 600, color: '#a78bfa', marginBottom: 12 }}>
-              💬 Comentarios ({comments.length})
-            </h2>
-
-            {isAuthenticated && (
-              <form onSubmit={handleComment} style={{ marginBottom: 16, display: 'flex', gap: 8 }}>
-                <input
-                  className="form-input"
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="Escribe un comentario…"
-                  style={{ flex: 1 }}
-                />
-                <button
-                  className="btn-primary"
-                  type="submit"
-                  disabled={commentLoading}
-                  style={{ width: 'auto', padding: '10px 16px', fontSize: 13 }}
-                >
-                  Enviar
-                </button>
-              </form>
-            )}
-
-            {!isAuthenticated && (
-              <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 12 }}>
-                <a href="/login" style={{ color: '#8b5cf6' }}>Inicia sesión</a> para comentar
-              </p>
-            )}
-
-            {comments.length === 0 ? (
-              <p style={{ color: '#6b7280', fontSize: 13 }}>Sé el primero en comentar</p>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {comments.map((c) => (
-                  <div
-                    key={c.id}
-                    style={{ background: '#1e1d1d', border: '1px solid #3a3939', borderRadius: 10, padding: '12px 14px' }}
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                      <span style={{ fontSize: 13, fontWeight: 600, color: '#a78bfa' }}>
-                        {c.username || 'Anónimo'}
-                      </span>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <span style={{ fontSize: 11, color: '#6b7280' }}>
-                          {new Date(c.created_at).toLocaleDateString('es')}
-                        </span>
-                        {(isAdmin || user?.id === c.user_id) && (
-                          <button
-                            onClick={() => handleDeleteComment(c.id)}
-                            style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: 12 }}
-                          >
-                            ✕
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                    <p style={{ fontSize: 14, color: '#d1d5db' }}>{c.description}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </section>
+          
         </div>
       </main>
       <BottomNav />

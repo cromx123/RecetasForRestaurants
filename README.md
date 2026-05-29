@@ -62,60 +62,6 @@ docker compose down -v
 docker compose up --build
 ```
 
-## Endpoints principales
-
-### Autenticación
-```
-POST /api/auth/login        { username, password }
-POST /api/auth/register     { username, email, password }
-GET  /api/auth/me           [JWT]
-```
-
-### Recetas
-```
-GET    /api/recipes
-GET    /api/recipes/search?q=texto
-GET    /api/recipes/:id
-POST   /api/recipes         [Admin JWT]
-PUT    /api/recipes/:id     [Admin JWT]
-DELETE /api/recipes/:id     [Admin JWT]
-```
-
-### Ingredientes
-```
-GET    /api/ingredients
-POST   /api/ingredients     [Admin JWT]
-DELETE /api/ingredients/:id [Admin JWT]
-```
-
-### Filtros
-```
-GET    /api/filters
-POST   /api/filters         [Admin JWT]
-DELETE /api/filters/:id     [Admin JWT]
-```
-
-### Favoritos
-```
-GET    /api/favorites        [JWT]
-POST   /api/favorites/:id    [JWT]
-DELETE /api/favorites/:id    [JWT]
-```
-
-### Comentarios
-```
-GET    /api/recipes/:id/comments
-POST   /api/recipes/:id/comments  [JWT]
-DELETE /api/comments/:id          [JWT, autor o Admin]
-```
-
-### Usuarios
-```
-GET    /api/users           [Admin JWT]
-PUT    /api/users/:id       [JWT]
-DELETE /api/users/:id       [Admin JWT]
-```
-
 ## Funcionalidades
 
 **Administrador:**
