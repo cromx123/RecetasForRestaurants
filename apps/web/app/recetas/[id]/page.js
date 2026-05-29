@@ -174,43 +174,6 @@ export default function RecetaPage() {
             </section>
           )}
 
-          {/* Pasos */}
-          {recipe.steps?.length > 0 && (
-            <section style={{ marginBottom: 32 }}>
-              <h2 style={{ fontSize: 18, fontWeight: 700, color: theme.textMain, marginBottom: 16, textTransform: 'uppercase', letterSpacing: '1px', borderBottom: `1px solid ${theme.border}`, paddingBottom: 8 }}>
-                Preparación
-              </h2>
-              <ol style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
-                {recipe.steps.map((step, i) => (
-                  <li
-                    key={step.id}
-                    style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}
-                  >
-                    <span
-                      style={{
-                        width: 28,
-                        height: 28,
-                        borderRadius: '50%',
-                        background: theme.accentLight,
-                        color: theme.accent,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: 14,
-                        fontWeight: 700,
-                        flexShrink: 0,
-                        marginTop: 2
-                      }}
-                    >
-                      {i + 1}
-                    </span>
-                    <span style={{ fontSize: 15, color: theme.textMain, lineHeight: 1.6 }}>{step.description}</span>
-                  </li>
-                ))}
-              </ol>
-            </section>
-          )}
-
           {/* Link */}
           {recipe.link && (
             <section style={{ marginBottom: 32 }}>

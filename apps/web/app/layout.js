@@ -17,7 +17,7 @@ export const metadata = {
 
   title: {
     default: 'MagicGourmet | Alta Gastronomía y Carta Digital',
-    template: '%s | MagicGourmet', // Ej: "Reservar Mesa | MagicGourmet"
+    template: '%s | MagicGourmet', 
   },
   description: 'Explora la carta digital de MagicGourmet. Descubre nuestra propuesta de alta gastronomía, cocina de autor y reserva tu mesa en línea de manera exclusiva.',
   keywords: ['alta gastronomía', 'cocina de autor', 'restaurante', 'reservas online', 'carta digital', 'MagicGourmet', 'cenas exclusivas'],
@@ -34,7 +34,7 @@ export const metadata = {
     description: 'Descubre nuestra propuesta de cocina de autor y reserva tu mesa en línea.',
     images: [
       {
-        url: '/assets/og-image.jpg', // Crea una imagen de 1200x630px atractiva y ponla en /public/assets
+        url: '/assets/og-image.jpg', 
         width: 1200,
         height: 630,
         alt: 'Platillo de alta gastronomía en MagicGourmet',
@@ -59,12 +59,6 @@ export const metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
-  },
-
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
   },
 
   alternates: {
