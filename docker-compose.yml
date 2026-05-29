@@ -1,0 +1,65 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: magicgourmet_db
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: magicgourmet
+      MYSQL_USER: magicuser
+      MYSQL_PASSWORD: magicpass
+      MYSQL_ROOT_PASSWORD: rootpass
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "magicuser", "-pmagicpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: magicgourmet_api
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      PORT: 4000
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: magicuser
+      DB_PASSWORD: magicpass
+      DB_NAME: magicgourmet
+      JWT_SECRET: change_me_dev_secret_2024
+      NODE_ENV: production
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    container_name: magicgourmet_web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: /api
+      API_INTERNAL_URL: http://api:4000
+      NODE_ENV: production
+
+volumes:
+  mysql_data:
+
+networks:
+  default:
+    name: magicgourmet_network
